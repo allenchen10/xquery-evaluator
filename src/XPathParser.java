@@ -1,4 +1,4 @@
-// Generated from /Users/chenjiachen/Documents/UCSD/WI21/CSE 232B/XPath/src/XPath.g4 by ANTLR 4.9.1
+// Generated from /Users/chenjiachen/Documents/UCSD/WI21/CSE 232B/cse-232b-project/src/XPath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -18,7 +18,7 @@ public class XPathParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, ID=21, STRING=22, WS=23;
+		T__17=18, T__18=19, T__19=20, TAGNAME=21, ATTRIBNAME=22, STRING=23, WS=24;
 	public static final int
 		RULE_ap = 0, RULE_rp = 1, RULE_f = 2;
 	private static String[] makeRuleNames() {
@@ -31,7 +31,7 @@ public class XPathParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "'doc('", "')'", "'/'", "'//'", "'*'", "'.'", "'..'", "'text()'", 
-			"'@'", "'('", "'['", "']'", "','", "'='", "'eq'", "'=='", "'is'", "'and'", 
+			"'@'", "'('", "','", "'['", "']'", "'='", "'eq'", "'=='", "'is'", "'and'", 
 			"'or'", "'not'"
 		};
 	}
@@ -39,8 +39,8 @@ public class XPathParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, null, "ID", "STRING", 
-			"WS"
+			null, null, null, null, null, null, null, null, null, "TAGNAME", "ATTRIBNAME", 
+			"STRING", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -163,7 +163,8 @@ public class XPathParser extends Parser {
 		public Token tagName;
 		public Token op;
 		public Token attName;
-		public TerminalNode ID() { return getToken(XPathParser.ID, 0); }
+		public TerminalNode TAGNAME() { return getToken(XPathParser.TAGNAME, 0); }
+		public TerminalNode ATTRIBNAME() { return getToken(XPathParser.ATTRIBNAME, 0); }
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
@@ -208,54 +209,48 @@ public class XPathParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(24);
+			setState(21);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case ID:
+			case TAGNAME:
 				{
 				setState(13);
-				((RpContext)_localctx).tagName = match(ID);
+				((RpContext)_localctx).tagName = match(TAGNAME);
 				}
 				break;
 			case T__4:
-				{
-				setState(14);
-				((RpContext)_localctx).op = match(T__4);
-				}
-				break;
 			case T__5:
-				{
-				setState(15);
-				((RpContext)_localctx).op = match(T__5);
-				}
-				break;
 			case T__6:
-				{
-				setState(16);
-				((RpContext)_localctx).op = match(T__6);
-				}
-				break;
 			case T__7:
 				{
-				setState(17);
-				((RpContext)_localctx).op = match(T__7);
+				setState(14);
+				((RpContext)_localctx).op = _input.LT(1);
+				_la = _input.LA(1);
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << T__7))) != 0)) ) {
+					((RpContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
+					consume();
+				}
 				}
 				break;
 			case T__8:
 				{
-				setState(18);
+				setState(15);
 				((RpContext)_localctx).op = match(T__8);
-				setState(19);
-				((RpContext)_localctx).attName = match(ID);
+				setState(16);
+				((RpContext)_localctx).attName = match(ATTRIBNAME);
 				}
 				break;
 			case T__9:
 				{
-				setState(20);
+				setState(17);
 				((RpContext)_localctx).op = match(T__9);
-				setState(21);
+				setState(18);
 				rp(0);
-				setState(22);
+				setState(19);
 				match(T__1);
 				}
 				break;
@@ -263,7 +258,7 @@ public class XPathParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(39);
+			setState(33);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -271,19 +266,19 @@ public class XPathParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(37);
+					setState(31);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
 						_localctx = new RpContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
-						setState(26);
-						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(27);
+						setState(23);
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+						setState(24);
 						((RpContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
-						if ( !(_la==T__2 || _la==T__3) ) {
+						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__10))) != 0)) ) {
 							((RpContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
@@ -291,40 +286,28 @@ public class XPathParser extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(28);
-						rp(4);
+						setState(25);
+						rp(3);
 						}
 						break;
 					case 2:
 						{
 						_localctx = new RpContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
-						setState(29);
+						setState(26);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(30);
-						((RpContext)_localctx).op = match(T__12);
-						setState(31);
-						rp(2);
-						}
-						break;
-					case 3:
-						{
-						_localctx = new RpContext(_parentctx, _parentState);
-						pushNewRecursionContext(_localctx, _startState, RULE_rp);
-						setState(32);
-						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(33);
-						((RpContext)_localctx).op = match(T__10);
-						setState(34);
+						setState(27);
+						((RpContext)_localctx).op = match(T__11);
+						setState(28);
 						f(0);
-						setState(35);
-						match(T__11);
+						setState(29);
+						match(T__12);
 						}
 						break;
 					}
 					} 
 				}
-				setState(41);
+				setState(35);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			}
@@ -386,130 +369,101 @@ public class XPathParser extends Parser {
 		FContext _prevctx = _localctx;
 		int _startState = 4;
 		enterRecursionRule(_localctx, 4, RULE_f, _p);
+		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(70);
+			setState(52);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 			case 1:
 				{
-				setState(43);
+				setState(37);
 				rp(0);
 				}
 				break;
 			case 2:
 				{
-				setState(44);
+				setState(38);
 				rp(0);
-				setState(45);
-				((FContext)_localctx).op = match(T__13);
-				setState(46);
+				setState(39);
+				((FContext)_localctx).op = _input.LT(1);
+				_la = _input.LA(1);
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__13) | (1L << T__14) | (1L << T__15) | (1L << T__16))) != 0)) ) {
+					((FContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
+					consume();
+				}
+				setState(40);
 				rp(0);
 				}
 				break;
 			case 3:
 				{
-				setState(48);
+				setState(42);
 				rp(0);
-				setState(49);
-				((FContext)_localctx).op = match(T__14);
-				setState(50);
-				rp(0);
+				setState(43);
+				((FContext)_localctx).op = match(T__13);
+				setState(44);
+				match(STRING);
 				}
 				break;
 			case 4:
 				{
-				setState(52);
-				rp(0);
-				setState(53);
-				((FContext)_localctx).op = match(T__15);
-				setState(54);
-				rp(0);
+				setState(46);
+				((FContext)_localctx).op = match(T__9);
+				setState(47);
+				f(0);
+				setState(48);
+				match(T__1);
 				}
 				break;
 			case 5:
 				{
-				setState(56);
-				rp(0);
-				setState(57);
-				((FContext)_localctx).op = match(T__16);
-				setState(58);
-				rp(0);
-				}
-				break;
-			case 6:
-				{
-				setState(60);
-				rp(0);
-				setState(61);
-				((FContext)_localctx).op = match(T__13);
-				setState(62);
-				match(STRING);
-				}
-				break;
-			case 7:
-				{
-				setState(64);
-				((FContext)_localctx).op = match(T__9);
-				setState(65);
-				f(0);
-				setState(66);
-				match(T__1);
-				}
-				break;
-			case 8:
-				{
-				setState(68);
+				setState(50);
 				((FContext)_localctx).op = match(T__19);
-				setState(69);
+				setState(51);
 				f(1);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(80);
+			setState(59);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(78);
-					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
-					case 1:
-						{
-						_localctx = new FContext(_parentctx, _parentState);
-						pushNewRecursionContext(_localctx, _startState, RULE_f);
-						setState(72);
-						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(73);
-						((FContext)_localctx).op = match(T__17);
-						setState(74);
-						f(4);
-						}
-						break;
-					case 2:
-						{
-						_localctx = new FContext(_parentctx, _parentState);
-						pushNewRecursionContext(_localctx, _startState, RULE_f);
-						setState(75);
-						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(76);
-						((FContext)_localctx).op = match(T__18);
-						setState(77);
-						f(3);
-						}
-						break;
+					{
+					_localctx = new FContext(_parentctx, _parentState);
+					pushNewRecursionContext(_localctx, _startState, RULE_f);
+					setState(54);
+					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+					setState(55);
+					((FContext)_localctx).op = _input.LT(1);
+					_la = _input.LA(1);
+					if ( !(_la==T__17 || _la==T__18) ) {
+						((FContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+					}
+					else {
+						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+						_errHandler.reportMatch(this);
+						consume();
+					}
+					setState(56);
+					f(3);
 					}
 					} 
 				}
-				setState(82);
+				setState(61);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			}
 			}
 		}
@@ -536,48 +490,40 @@ public class XPathParser extends Parser {
 	private boolean rp_sempred(RpContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 3);
+			return precpred(_ctx, 2);
 		case 1:
 			return precpred(_ctx, 1);
-		case 2:
-			return precpred(_ctx, 2);
 		}
 		return true;
 	}
 	private boolean f_sempred(FContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 3:
-			return precpred(_ctx, 3);
-		case 4:
+		case 2:
 			return precpred(_ctx, 2);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\31V\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\32A\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
-		"\3\3\3\3\3\3\5\3\33\n\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7"+
-		"\3(\n\3\f\3\16\3+\13\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4"+
-		"\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4I"+
-		"\n\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4Q\n\4\f\4\16\4T\13\4\3\4\2\4\4\6\5\2\4"+
-		"\6\2\3\3\2\5\6\2d\2\b\3\2\2\2\4\32\3\2\2\2\6H\3\2\2\2\b\t\7\3\2\2\t\n"+
-		"\7\30\2\2\n\13\7\4\2\2\13\f\t\2\2\2\f\r\5\4\3\2\r\3\3\2\2\2\16\17\b\3"+
-		"\1\2\17\33\7\27\2\2\20\33\7\7\2\2\21\33\7\b\2\2\22\33\7\t\2\2\23\33\7"+
-		"\n\2\2\24\25\7\13\2\2\25\33\7\27\2\2\26\27\7\f\2\2\27\30\5\4\3\2\30\31"+
-		"\7\4\2\2\31\33\3\2\2\2\32\16\3\2\2\2\32\20\3\2\2\2\32\21\3\2\2\2\32\22"+
-		"\3\2\2\2\32\23\3\2\2\2\32\24\3\2\2\2\32\26\3\2\2\2\33)\3\2\2\2\34\35\f"+
-		"\5\2\2\35\36\t\2\2\2\36(\5\4\3\6\37 \f\3\2\2 !\7\17\2\2!(\5\4\3\4\"#\f"+
-		"\4\2\2#$\7\r\2\2$%\5\6\4\2%&\7\16\2\2&(\3\2\2\2\'\34\3\2\2\2\'\37\3\2"+
-		"\2\2\'\"\3\2\2\2(+\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*\5\3\2\2\2+)\3\2\2\2,"+
-		"-\b\4\1\2-I\5\4\3\2./\5\4\3\2/\60\7\20\2\2\60\61\5\4\3\2\61I\3\2\2\2\62"+
-		"\63\5\4\3\2\63\64\7\21\2\2\64\65\5\4\3\2\65I\3\2\2\2\66\67\5\4\3\2\67"+
-		"8\7\22\2\289\5\4\3\29I\3\2\2\2:;\5\4\3\2;<\7\23\2\2<=\5\4\3\2=I\3\2\2"+
-		"\2>?\5\4\3\2?@\7\20\2\2@A\7\30\2\2AI\3\2\2\2BC\7\f\2\2CD\5\6\4\2DE\7\4"+
-		"\2\2EI\3\2\2\2FG\7\26\2\2GI\5\6\4\3H,\3\2\2\2H.\3\2\2\2H\62\3\2\2\2H\66"+
-		"\3\2\2\2H:\3\2\2\2H>\3\2\2\2HB\3\2\2\2HF\3\2\2\2IR\3\2\2\2JK\f\5\2\2K"+
-		"L\7\24\2\2LQ\5\6\4\6MN\f\4\2\2NO\7\25\2\2OQ\5\6\4\5PJ\3\2\2\2PM\3\2\2"+
-		"\2QT\3\2\2\2RP\3\2\2\2RS\3\2\2\2S\7\3\2\2\2TR\3\2\2\2\b\32\')HPR";
+		"\5\3\30\n\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3\"\n\3\f\3\16\3%\13\3\3"+
+		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4\67"+
+		"\n\4\3\4\3\4\3\4\7\4<\n\4\f\4\16\4?\13\4\3\4\2\4\4\6\5\2\4\6\2\7\3\2\5"+
+		"\6\3\2\7\n\4\2\5\6\r\r\3\2\20\23\3\2\24\25\2G\2\b\3\2\2\2\4\27\3\2\2\2"+
+		"\6\66\3\2\2\2\b\t\7\3\2\2\t\n\7\31\2\2\n\13\7\4\2\2\13\f\t\2\2\2\f\r\5"+
+		"\4\3\2\r\3\3\2\2\2\16\17\b\3\1\2\17\30\7\27\2\2\20\30\t\3\2\2\21\22\7"+
+		"\13\2\2\22\30\7\30\2\2\23\24\7\f\2\2\24\25\5\4\3\2\25\26\7\4\2\2\26\30"+
+		"\3\2\2\2\27\16\3\2\2\2\27\20\3\2\2\2\27\21\3\2\2\2\27\23\3\2\2\2\30#\3"+
+		"\2\2\2\31\32\f\4\2\2\32\33\t\4\2\2\33\"\5\4\3\5\34\35\f\3\2\2\35\36\7"+
+		"\16\2\2\36\37\5\6\4\2\37 \7\17\2\2 \"\3\2\2\2!\31\3\2\2\2!\34\3\2\2\2"+
+		"\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\5\3\2\2\2%#\3\2\2\2&\'\b\4\1\2\'\67\5"+
+		"\4\3\2()\5\4\3\2)*\t\5\2\2*+\5\4\3\2+\67\3\2\2\2,-\5\4\3\2-.\7\20\2\2"+
+		"./\7\31\2\2/\67\3\2\2\2\60\61\7\f\2\2\61\62\5\6\4\2\62\63\7\4\2\2\63\67"+
+		"\3\2\2\2\64\65\7\26\2\2\65\67\5\6\4\3\66&\3\2\2\2\66(\3\2\2\2\66,\3\2"+
+		"\2\2\66\60\3\2\2\2\66\64\3\2\2\2\67=\3\2\2\289\f\4\2\29:\t\6\2\2:<\5\6"+
+		"\4\5;8\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2\2>\7\3\2\2\2?=\3\2\2\2\7\27"+
+		"!#\66=";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

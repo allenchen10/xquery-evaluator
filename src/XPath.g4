@@ -2,27 +2,20 @@ grammar XPath;
 ap
     : 'doc(' fileName=STRING ')' op=('/'|'//') rp;
 rp
-    : tagName=ID
-	| op='*'
-	| op='.'
-	| op='..'
-	| op='text()'
-	| op='@' attName=ID
+    : tagName=TAGNAME
+	| op=('*'|'.'|'..'|'text()')
+	| op='@' attName=ATTRIBNAME
 	| op='(' rp ')'
-	| rp op=('/'|'//') rp
-	| rp op='[' f ']'
-	| rp op=',' rp;
+	| rp op=('/'|'//'|',') rp
+	| rp op='[' f ']';
 f
     : rp
-	| rp op='=' rp
-	| rp op='eq' rp
-	| rp op='==' rp
-	| rp op='is' rp
+	| rp op=('='|'eq'|'=='|'is') rp
 	| rp op='=' STRING
 	| op='(' f ')'
-	| f op='and' f
-	| f op='or' f
+	| f op=('and'|'or') f
 	| op='not' f;
-ID: [a-zA-Z]+;
+TAGNAME: [a-zA-Z_]+;
+ATTRIBNAME: [a-zA-Z0-9_]+;
 STRING: '"' .*? '"';
-WS : [ \t\r\n]+ -> skip ;
+WS: [ \t\r\n]+ -> skip ;

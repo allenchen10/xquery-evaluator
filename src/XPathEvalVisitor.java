@@ -183,20 +183,6 @@ public class XPathEvalVisitor extends XPathBaseVisitor<List<Node>> {
             case "eq":
                 List<Node> current = new ArrayList<>();
                 for (Node node:
-                     nodes) {
-                    current.clear();
-                    current.add(node);
-                    current = visitRp(ctx.rp(0), current);
-                    current.retainAll(visitRp(ctx.rp(1), current));
-                    if (!current.isEmpty()) {
-                        result.add(node);
-                    }
-                }
-                break;
-            case "==":
-            case "is":
-                current = new ArrayList<>();
-                for (Node node:
                         nodes) {
                     current.clear();
                     current.add(node);
@@ -204,10 +190,10 @@ public class XPathEvalVisitor extends XPathBaseVisitor<List<Node>> {
                     List<Node> rightNodes = visitRp(ctx.rp(1), current);
                     boolean same = false;
                     for (Node left:
-                         leftNodes) {
+                            leftNodes) {
                         for (Node right:
-                             rightNodes) {
-                            if (left.isSameNode(right)) {
+                                rightNodes) {
+                            if (left.isEqualNode(right)) {
                                 same = true;
                                 break;
                             }
@@ -221,11 +207,25 @@ public class XPathEvalVisitor extends XPathBaseVisitor<List<Node>> {
                     }
                 }
                 break;
+            case "==":
+            case "is":
+                current = new ArrayList<>();
+                for (Node node:
+                        nodes) {
+                    current.clear();
+                    current.add(node);
+                    List<Node> left = visitRp(ctx.rp(0), current);
+                    left.retainAll(visitRp(ctx.rp(1), current));
+                    if (!left.isEmpty()) {
+                        result.add(node);
+                    }
+                }
+                break;
             case "(":
                 return visitF(ctx.f(0), nodes);
             case "and":
                 current = visitF(ctx.f(0), nodes);
-                return visitF(ctx.f(0), current);
+                return visitF(ctx.f(1), current);
             case "or":
                 current = new ArrayList<>();
                 for (Node node:

@@ -45,7 +45,7 @@ public class Main {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
             DOMSource source = new DOMSource(doc);
-            File f = new File("output");
+            File f = new File("output.xml");
             StreamResult streamResult = new StreamResult(f);
             transformer.transform(source, streamResult);
 
