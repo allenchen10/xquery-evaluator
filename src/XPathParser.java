@@ -18,7 +18,7 @@ public class XPathParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, TAGNAME=21, ATTRIBNAME=22, STRING=23, WS=24;
+		T__17=18, T__18=19, T__19=20, ID=21, STRING=22, WS=23;
 	public static final int
 		RULE_ap = 0, RULE_rp = 1, RULE_f = 2;
 	private static String[] makeRuleNames() {
@@ -39,8 +39,8 @@ public class XPathParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, null, "TAGNAME", "ATTRIBNAME", 
-			"STRING", "WS"
+			null, null, null, null, null, null, null, null, null, "ID", "STRING", 
+			"WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -163,8 +163,7 @@ public class XPathParser extends Parser {
 		public Token tagName;
 		public Token op;
 		public Token attName;
-		public TerminalNode TAGNAME() { return getToken(XPathParser.TAGNAME, 0); }
-		public TerminalNode ATTRIBNAME() { return getToken(XPathParser.ATTRIBNAME, 0); }
+		public TerminalNode ID() { return getToken(XPathParser.ID, 0); }
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
@@ -212,10 +211,10 @@ public class XPathParser extends Parser {
 			setState(21);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case TAGNAME:
+			case ID:
 				{
 				setState(13);
-				((RpContext)_localctx).tagName = match(TAGNAME);
+				((RpContext)_localctx).tagName = match(ID);
 				}
 				break;
 			case T__4:
@@ -241,7 +240,7 @@ public class XPathParser extends Parser {
 				setState(15);
 				((RpContext)_localctx).op = match(T__8);
 				setState(16);
-				((RpContext)_localctx).attName = match(ATTRIBNAME);
+				((RpContext)_localctx).attName = match(ID);
 				}
 				break;
 			case T__9:
@@ -505,21 +504,21 @@ public class XPathParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\32A\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\31A\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\5\3\30\n\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3\"\n\3\f\3\16\3%\13\3\3"+
 		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4\67"+
 		"\n\4\3\4\3\4\3\4\7\4<\n\4\f\4\16\4?\13\4\3\4\2\4\4\6\5\2\4\6\2\7\3\2\5"+
 		"\6\3\2\7\n\4\2\5\6\r\r\3\2\20\23\3\2\24\25\2G\2\b\3\2\2\2\4\27\3\2\2\2"+
-		"\6\66\3\2\2\2\b\t\7\3\2\2\t\n\7\31\2\2\n\13\7\4\2\2\13\f\t\2\2\2\f\r\5"+
+		"\6\66\3\2\2\2\b\t\7\3\2\2\t\n\7\30\2\2\n\13\7\4\2\2\13\f\t\2\2\2\f\r\5"+
 		"\4\3\2\r\3\3\2\2\2\16\17\b\3\1\2\17\30\7\27\2\2\20\30\t\3\2\2\21\22\7"+
-		"\13\2\2\22\30\7\30\2\2\23\24\7\f\2\2\24\25\5\4\3\2\25\26\7\4\2\2\26\30"+
+		"\13\2\2\22\30\7\27\2\2\23\24\7\f\2\2\24\25\5\4\3\2\25\26\7\4\2\2\26\30"+
 		"\3\2\2\2\27\16\3\2\2\2\27\20\3\2\2\2\27\21\3\2\2\2\27\23\3\2\2\2\30#\3"+
 		"\2\2\2\31\32\f\4\2\2\32\33\t\4\2\2\33\"\5\4\3\5\34\35\f\3\2\2\35\36\7"+
 		"\16\2\2\36\37\5\6\4\2\37 \7\17\2\2 \"\3\2\2\2!\31\3\2\2\2!\34\3\2\2\2"+
 		"\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\5\3\2\2\2%#\3\2\2\2&\'\b\4\1\2\'\67\5"+
 		"\4\3\2()\5\4\3\2)*\t\5\2\2*+\5\4\3\2+\67\3\2\2\2,-\5\4\3\2-.\7\20\2\2"+
-		"./\7\31\2\2/\67\3\2\2\2\60\61\7\f\2\2\61\62\5\6\4\2\62\63\7\4\2\2\63\67"+
+		"./\7\30\2\2/\67\3\2\2\2\60\61\7\f\2\2\61\62\5\6\4\2\62\63\7\4\2\2\63\67"+
 		"\3\2\2\2\64\65\7\26\2\2\65\67\5\6\4\3\66&\3\2\2\2\66(\3\2\2\2\66,\3\2"+
 		"\2\2\66\60\3\2\2\2\66\64\3\2\2\2\67=\3\2\2\289\f\4\2\29:\t\6\2\2:<\5\6"+
 		"\4\5;8\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2\2>\7\3\2\2\2?=\3\2\2\2\7\27"+

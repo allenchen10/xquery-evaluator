@@ -1,4 +1,5 @@
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -97,12 +98,11 @@ public class XPathEvalVisitor extends XPathBaseVisitor<List<Node>> {
             case "@":
                 for (Node node:
                         nodes) {
-                    Node child = node.getFirstChild();
-                    while (child != null) {
-                        if (child.getNodeType() == Node.ATTRIBUTE_NODE) {
-                            result.add(child);
+                    if (node.hasAttributes()) {
+                        Node att = node.getAttributes().getNamedItem(ctx.attName.getText());
+                        if (att != null) {
+                            result.add(att);
                         }
-                        child = child.getNextSibling();
                     }
                 }
                 break;
@@ -152,11 +152,11 @@ public class XPathEvalVisitor extends XPathBaseVisitor<List<Node>> {
             List<Node> current = new ArrayList<>();
             for (Node node:
                  nodes) {
+                current.clear();
                 current.add(node);
                 if (!visitRp(ctx.rp(0), current).isEmpty()) {
                     result.add(node);
                 }
-                current.clear();
             }
             return result;
         }

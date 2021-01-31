@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <input>
 <x>
-    <a hello="a">
+    <a hello="hello">
         <b>a</b>
     </a>
 </x>
-<y><a><b>a</b></a></y>
+<y>
+    <a hello123="hi">
+        <b>a</b>
+    </a>
+</y>
 </input>

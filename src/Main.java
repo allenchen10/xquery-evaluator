@@ -3,6 +3,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -34,7 +35,9 @@ public class Main {
 
             for (Node node:
                  nodes) {
-                result.appendChild(doc.adoptNode(node.cloneNode(true)));
+                if (node.getNodeType() != Node.ATTRIBUTE_NODE) {
+                    result.appendChild(doc.adoptNode(node.cloneNode(true)));
+                }
             }
 
             // Use a Transformer for output
