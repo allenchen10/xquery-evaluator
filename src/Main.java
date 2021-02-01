@@ -35,7 +35,9 @@ public class Main {
 
             for (Node node:
                  nodes) {
-                if (node.getNodeType() != Node.ATTRIBUTE_NODE) {
+                if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+                    result.appendChild(doc.createTextNode(node.getTextContent()));
+                } else {
                     result.appendChild(doc.adoptNode(node.cloneNode(true)));
                 }
             }

@@ -1,1 +1,1 @@
-doc("input.xml")//a[@hello = "hello"]
+doc("input.xml")//a, @hello123
