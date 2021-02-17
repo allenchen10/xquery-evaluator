@@ -27,9 +27,9 @@ public class XPathEvalVisitor extends XPathBaseVisitor<List<Node>> {
         }
         List<Node> nodes = new ArrayList<>();
         if (ctx.op.getText().equals("//")) {
-            nodes.addAll(descendantNodes(doc.getDocumentElement()));
+            nodes.addAll(descendantNodes(doc.getDocumentElement().getParentNode()));
         } else {
-            nodes.add(doc.getDocumentElement());
+            nodes.add(doc.getDocumentElement().getParentNode());
         }
         return visitRp(ctx.rp(), nodes);
     }

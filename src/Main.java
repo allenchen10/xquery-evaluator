@@ -37,7 +37,8 @@ public class Main {
                  nodes) {
                 if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
                     result.appendChild(doc.createTextNode(node.getTextContent()));
-                } else {
+                }
+                if (node.getNodeType() == Node.ELEMENT_NODE || node.getNodeType() == Node.TEXT_NODE){
                     result.appendChild(doc.adoptNode(node.cloneNode(true)));
                 }
             }
