@@ -1,1 +1,5 @@
-doc("j_caesar.xml")//ACT[./TITLE]/*/SPEECH/../*/.././TITLE
+<result>{
+for $s in doc("j_caesar.xml")//SPEAKER return <speaks>{<who>{$s/text()}</who>,
+for $a in doc("j_caesar.xml")//ACT
+return <when>{$a/TITLE/text()}</when>}
+</speaks> }</result>

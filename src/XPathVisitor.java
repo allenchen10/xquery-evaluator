@@ -10,6 +10,48 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	/**
+	 * Visit a parse tree produced by {@link XPathParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXq(XPathParser.XqContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XPathParser#var}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVar(XPathParser.VarContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XPathParser#forClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForClause(XPathParser.ForClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XPathParser#letClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLetClause(XPathParser.LetClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XPathParser#whereClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhereClause(XPathParser.WhereClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XPathParser#returnClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnClause(XPathParser.ReturnClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XPathParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond(XPathParser.CondContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link XPathParser#ap}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

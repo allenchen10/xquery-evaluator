@@ -1,19 +1,122 @@
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class XPathEvalVisitor extends XPathBaseVisitor<List<Node>> {
+public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> {
 
     private Document doc;
 
     @Override
-    public List<Node> visitAp(XPathParser.ApContext ctx) {
+    public Map<String, List<Node>> visitXq(XPathParser.XqContext ctx) {
+        Map<String, List<Node>> dict = new HashMap<>();
+        dict.put("", null);
+        return visitXq(ctx, dict);
+    }
+
+    public Map<String, List<Node>> visitXq(XPathParser.XqContext ctx, Map<String, List<Node>> dict) {
+        if (ctx.op == null) {
+            if (ctx.var() != null) {
+                dict.replace("", dict.get(ctx.var().varName.getText()));
+                return dict;
+            }
+            if (ctx.ap() != null) {
+                return visitAp(ctx.ap());
+            }
+            if (ctx.text != null) {
+                Node text = makeText(ctx.text.getText());
+                dict.replace("", new ArrayList<>());
+                dict.get("").add(text);
+                return dict;
+            }
+            if (ctx.forClause() != null) {
+                // for
+                XPathParser.ForClauseContext forCtx = ctx.forClause();
+                List<XPathParser.VarContext> vars = forCtx.var();
+                for (int i = 0; i < vars.size(); i++) {
+                    String varName = vars.get(i).varName.getText();
+                    if (dict.containsKey(varName)) {
+                        dict.replace(varName, visitXq(forCtx.xq(i), dict).get(""));
+                    } else {
+                        dict.put(varName, visitXq(forCtx.xq(i), dict).get(""));
+                    }
+                }
+                // let
+                // where
+                // return
+                XPathParser.ReturnClauseContext retCtx = ctx.returnClause();
+                return visitXq(retCtx.xq(), dict);
+            }
+        }
+        switch (ctx.op.getText()) {
+            case "(":
+                return visitXq(ctx, dict);
+            case ",":
+                dict = visitXq(ctx.xq(0), dict);
+                List<Node> current = dict.get("");
+                current.addAll(visitXq(ctx.xq(1), dict).get(""));
+                dict.replace("", current);
+                return dict;
+            case "/":
+                dict = visitXq(ctx.xq(0), dict);
+                current = visitRp(ctx.rp(), dict.get(""));
+                List<Node> result = new ArrayList<>();
+                for (Node node:
+                        current) {
+                    if (!result.contains(node)) {
+                        result.add(node);
+                    }
+                }
+                dict.replace("", result);
+                return dict;
+            case "//":
+                current = visitXq(ctx.xq(0), dict).get("");
+                List<Node> descendants = new ArrayList<>();
+                for (Node node:
+                        current) {
+                    descendants.addAll(descendantNodes(node));
+                }
+                current = visitRp(ctx.rp(), descendants);
+                result = new ArrayList<>();
+                for (Node node:
+                        current) {
+                    if (!result.contains(node)) {
+                        result.add(node);
+                    }
+                }
+                dict.replace("", result);
+                return dict;
+            case "<":
+                System.out.println(ctx.tagName);
+                Node elem = makeElem(ctx.tagName.getText(), visitXq(ctx.xq(0), dict).get(""));
+                dict.replace("", new ArrayList<>());
+                dict.get("").add(elem);
+                return dict;
+        }
+        return dict;
+    }
+
+    private Node makeText(String text) {
+        return doc.createTextNode(text);
+    }
+
+    private Node makeElem(String tagName, List<Node> nodes) {
+        Node root = doc.createElement(tagName);
+        for (Node node:
+             nodes) {
+            root.appendChild(doc.adoptNode(node.cloneNode(true)));
+        }
+        return root;
+    }
+
+    @Override
+    public Map<String, List<Node>> visitAp(XPathParser.ApContext ctx) {
         String fileNameText = ctx.STRING().getText();
         fileNameText = fileNameText.substring(1, fileNameText.length() - 1);
         try {
@@ -31,7 +134,9 @@ public class XPathEvalVisitor extends XPathBaseVisitor<List<Node>> {
         } else {
             nodes.add(doc.getDocumentElement().getParentNode());
         }
-        return visitRp(ctx.rp(), nodes);
+        Map<String, List<Node>> dict = new HashMap<>();
+        dict.put("", visitRp(ctx.rp(), nodes));
+        return dict;
     }
 
     private List<Node> descendantNodes(Node node) {

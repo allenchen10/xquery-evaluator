@@ -3,7 +3,6 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,6 +14,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,23 +23,29 @@ public class Main {
             XPathLexer lexer = new XPathLexer(query);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             XPathParser parser = new XPathParser(tokens);
-            ParseTree tree = parser.ap();
+            ParseTree tree = parser.xq();
             XPathEvalVisitor visitor = new XPathEvalVisitor();
-            List<Node> nodes = visitor.visit(tree);
+            Map<String, List<Node>> dict = visitor.visit(tree);
+            List<Node> nodes = dict.get("");
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.newDocument();
-            Node result = doc.createElement("result");
-            doc.appendChild(result);
 
-            for (Node node:
-                 nodes) {
-                if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-                    result.appendChild(doc.createTextNode(node.getTextContent()));
-                }
-                if (node.getNodeType() == Node.ELEMENT_NODE || node.getNodeType() == Node.TEXT_NODE){
-                    result.appendChild(doc.adoptNode(node.cloneNode(true)));
+            if (nodes.size() == 1 && nodes.get(0).getNodeType() == Node.ELEMENT_NODE) {
+                doc.appendChild(doc.adoptNode(nodes.get(0).cloneNode(true)));
+            } else {
+                Node result = doc.createElement("result");
+                doc.appendChild(result);
+
+                for (Node node :
+                        nodes) {
+                    if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+                        result.appendChild(doc.createTextNode(node.getTextContent()));
+                    }
+                    if (node.getNodeType() == Node.ELEMENT_NODE || node.getNodeType() == Node.TEXT_NODE) {
+                        result.appendChild(doc.adoptNode(node.cloneNode(true)));
+                    }
                 }
             }
 
