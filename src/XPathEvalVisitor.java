@@ -30,7 +30,9 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 return visitAp(ctx.ap());
             }
             if (ctx.text != null) {
-                Node text = makeText(ctx.text.getText());
+                String str = ctx.text.getText();
+                str = str.substring(1, str.length() - 1);
+                Node text = makeText(str);
                 dict.replace("", new ArrayList<>());
                 dict.get("").add(text);
                 return dict;
@@ -49,6 +51,67 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 }
                 // let
                 // where
+                if (ctx.whereClause() != null) {
+                    XPathParser.CondContext cndCtx = ctx.whereClause().cond();
+                    switch (cndCtx.op.getText()) {
+                        case "=":
+                        case "eq":
+                            List<Node> nodes = dict.get("");
+                            List<Node> result = new ArrayList<>();
+                            Map<String, List<Node>> currentDict = new HashMap<>(dict);
+                            List<Node> current = new ArrayList<>();
+                            for (Node node:
+                                    nodes) {
+                                current.clear();
+                                current.add(node);
+                                currentDict.replace("", current);
+                                List<Node> leftNodes = visitXq(cndCtx.xq(0), currentDict).get("");
+                                List<Node> rightNodes = visitXq(cndCtx.xq(1), currentDict).get("");
+                                boolean same = false;
+                                for (Node left:
+                                        leftNodes) {
+                                    for (Node right:
+                                            rightNodes) {
+                                        if (left.isEqualNode(right)) {
+                                            same = true;
+                                            break;
+                                        }
+                                    }
+                                    if (same) {
+                                        break;
+                                    }
+                                }
+                                if (same) {
+                                    result.add(node);
+                                }
+                            }
+                            dict.replace("", result);
+                            break;
+                        case "==":
+                        case "is":
+                            nodes = dict.get("");
+                            result = new ArrayList<>();
+                            currentDict = new HashMap<>(dict);
+                            for (Node node:
+                                    nodes) {
+                                currentDict.replace("", new ArrayList<>());
+                                currentDict.get("").add(node);
+                                List<Node> left = visitXq(cndCtx.xq(0), currentDict).get("");
+                                left.retainAll(visitXq(cndCtx.xq(1), currentDict).get(""));
+                                if (!left.isEmpty()) {
+                                    result.add(node);
+                                }
+                            }
+                            dict.replace("", result);
+                            break;
+                        case "empty":
+                        case "some":
+                        case "(":
+                        case "and":
+                        case "or":
+                        case "not":
+                    }
+                }
                 // return
                 XPathParser.ReturnClauseContext retCtx = ctx.returnClause();
                 return visitXq(retCtx.xq(), dict);
@@ -93,7 +156,6 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 dict.replace("", result);
                 return dict;
             case "<":
-                System.out.println(ctx.tagName);
                 Node elem = makeElem(ctx.tagName.getText(), visitXq(ctx.xq(0), dict).get(""));
                 dict.replace("", new ArrayList<>());
                 dict.get("").add(elem);

@@ -14,20 +14,20 @@ var
 forClause
     : 'for' (var 'in' xq ',')* var 'in' xq;
 letClause
-    : 'let';
+    : 'let' ;
 whereClause
     : 'where' cond;
 returnClause
     : 'return' xq;
 cond
     : xq op=('='|'eq'|'=='|'is') xq
-    | 'empty(' xq ')'
-    | 'some' (var 'in' xq ',')* var 'in' xq 'satisfies' cond
-    | '(' cond ')'
+    | op='empty' '(' xq ')'
+    | op='some' (var 'in' xq ',')* var 'in' xq 'satisfies' cond
+    | op='(' cond ')'
     | cond op=('and'|'or') cond
-    | 'not' cond;
+    | op='not' cond;
 ap
-    : 'doc(' fileName=STRING ')' op=('/'|'//') rp;
+    : 'doc' '(' fileName=STRING ')' op=('/'|'//') rp;
 rp
     : tagName=ID
 	| op=('*'|'.'|'..'|'text()')
