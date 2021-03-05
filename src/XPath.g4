@@ -14,7 +14,7 @@ var
 forClause
     : 'for' (var 'in' xq ',')* var 'in' xq;
 letClause
-    : 'let' ;
+    : 'let' (var ':=' xq ',')* var ':=' xq;
 whereClause
     : 'where' cond;
 returnClause

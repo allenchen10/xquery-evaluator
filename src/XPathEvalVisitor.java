@@ -20,6 +20,126 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
         return visitXq(ctx, dict);
     }
 
+    private Map<String, List<Node>> visitForClause(XPathParser.XqContext ctx, Map<String, List<Node>> dict, int applied) {
+        // for
+        XPathParser.ForClauseContext forCtx = ctx.forClause();
+        List<XPathParser.VarContext> vars = forCtx.var();
+        if (vars.size() - applied > 0) {
+            String varName = vars.get(applied).varName.getText();
+            List<Node> nodes = visitXq(forCtx.xq(applied), dict).get("");
+            List<Node> curr = new ArrayList<>();
+            List<Node> result = new ArrayList<>();
+            for (Node node:
+                    nodes) {
+                curr.clear();
+                curr.add(node);
+                if (dict.containsKey(varName)) {
+                    dict.replace(varName, curr);
+                } else {
+                    dict.put(varName, curr);
+                }
+                result.addAll(visitForClause(ctx, dict, applied + 1).get(""));
+            }
+            dict.replace("", result);
+            return dict;
+        }
+        if (ctx.letClause() != null) {
+            return visitLetClause(ctx, dict, 0);
+        }
+        return visitWhereClause(ctx, dict);
+    }
+
+    private Map<String, List<Node>> visitLetClause(XPathParser.XqContext ctx, Map<String, List<Node>> dict, int applied) {
+        XPathParser.LetClauseContext letCtx = ctx.letClause();
+        List<XPathParser.VarContext> vars = letCtx.var();
+        if (vars.size() - applied > 0) {
+            String varName = vars.get(applied).varName.getText();
+            List<Node> nodes = visitXq(letCtx.xq(applied), dict).get("");
+            dict.replace(varName, nodes);
+            return visitLetClause(ctx, dict, applied + 1);
+        }
+        if (ctx.whereClause() != null) {
+            return visitWhereClause(ctx, dict);
+        }
+        return visitXq(ctx.xq(0));
+    }
+
+    private Map<String, List<Node>> visitWhereClause(XPathParser.XqContext ctx, Map<String, List<Node>> dict) {
+        if (ctx.whereClause() != null) {
+            XPathParser.CondContext cndCtx = ctx.whereClause().cond();
+            if (!visitCond(cndCtx, dict, 0)) {
+                dict.replace("", new ArrayList<>());
+                return dict;
+            }
+        }
+        // return
+        XPathParser.ReturnClauseContext retCtx = ctx.returnClause();
+        return visitXq(retCtx.xq(), dict);
+    }
+
+    public boolean visitCond(XPathParser.CondContext ctx, Map<String, List<Node>> dict, int applied) {
+        switch (ctx.op.getText()) {
+            case "=":
+            case "eq":
+                List<Node> leftNodes = visitXq(ctx.xq(0), dict).get("");
+                List<Node> rightNodes = visitXq(ctx.xq(1), dict).get("");
+                boolean same = false;
+                for (Node left:
+                        leftNodes) {
+                    for (Node right:
+                            rightNodes) {
+                        if (left.isEqualNode(right)) {
+                            same = true;
+                            break;
+                        }
+                    }
+                }
+                return same;
+            case "==":
+            case "is":
+                leftNodes = visitXq(ctx.xq(0), dict).get("");
+                rightNodes = visitXq(ctx.xq(1), dict).get("");
+                leftNodes.retainAll(rightNodes);
+                return !leftNodes.isEmpty();
+            case "empty":
+                List<Node> nodes = visitXq(ctx.xq(0), dict).get("");
+                return nodes.isEmpty();
+            case "some":
+                List<XPathParser.VarContext> vars = ctx.var();
+                if (vars.size() - applied > 0) {
+                    String varName = vars.get(applied).varName.getText();
+                    nodes = visitXq(ctx.xq(applied), dict).get("");
+                    List<Node> curr = new ArrayList<>();
+                    boolean result = false;
+                    for (Node node:
+                         nodes) {
+                        curr.clear();
+                        curr.add(node);
+                        if (dict.containsKey(varName)) {
+                            dict.replace(varName, curr);
+                        } else {
+                            dict.put(varName, curr);
+                        }
+                        if (visitCond(ctx, dict, applied + 1)) {
+                            result = true;
+                            break;
+                        }
+                    }
+                    return result;
+                }
+                return visitCond(ctx.cond(0), dict, 0);
+            case "(":
+                return visitCond(ctx.cond(0), dict, 0);
+            case "and":
+                return visitCond(ctx.cond(0), dict, 0) && visitCond(ctx.cond(1), dict, 0);
+            case "or":
+                return visitCond(ctx.cond(0), dict, 0) || visitCond(ctx.cond(1), dict, 0);
+            case "not":
+                return !visitCond(ctx.cond(0), dict, 0);
+        }
+        return false;
+    }
+
     public Map<String, List<Node>> visitXq(XPathParser.XqContext ctx, Map<String, List<Node>> dict) {
         if (ctx.op == null) {
             if (ctx.var() != null) {
@@ -38,88 +158,12 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 return dict;
             }
             if (ctx.forClause() != null) {
-                // for
-                XPathParser.ForClauseContext forCtx = ctx.forClause();
-                List<XPathParser.VarContext> vars = forCtx.var();
-                for (int i = 0; i < vars.size(); i++) {
-                    String varName = vars.get(i).varName.getText();
-                    if (dict.containsKey(varName)) {
-                        dict.replace(varName, visitXq(forCtx.xq(i), dict).get(""));
-                    } else {
-                        dict.put(varName, visitXq(forCtx.xq(i), dict).get(""));
-                    }
-                }
-                // let
-                // where
-                if (ctx.whereClause() != null) {
-                    XPathParser.CondContext cndCtx = ctx.whereClause().cond();
-                    switch (cndCtx.op.getText()) {
-                        case "=":
-                        case "eq":
-                            List<Node> nodes = dict.get("");
-                            List<Node> result = new ArrayList<>();
-                            Map<String, List<Node>> currentDict = new HashMap<>(dict);
-                            List<Node> current = new ArrayList<>();
-                            for (Node node:
-                                    nodes) {
-                                current.clear();
-                                current.add(node);
-                                currentDict.replace("", current);
-                                List<Node> leftNodes = visitXq(cndCtx.xq(0), currentDict).get("");
-                                List<Node> rightNodes = visitXq(cndCtx.xq(1), currentDict).get("");
-                                boolean same = false;
-                                for (Node left:
-                                        leftNodes) {
-                                    for (Node right:
-                                            rightNodes) {
-                                        if (left.isEqualNode(right)) {
-                                            same = true;
-                                            break;
-                                        }
-                                    }
-                                    if (same) {
-                                        break;
-                                    }
-                                }
-                                if (same) {
-                                    result.add(node);
-                                }
-                            }
-                            dict.replace("", result);
-                            break;
-                        case "==":
-                        case "is":
-                            nodes = dict.get("");
-                            result = new ArrayList<>();
-                            currentDict = new HashMap<>(dict);
-                            for (Node node:
-                                    nodes) {
-                                currentDict.replace("", new ArrayList<>());
-                                currentDict.get("").add(node);
-                                List<Node> left = visitXq(cndCtx.xq(0), currentDict).get("");
-                                left.retainAll(visitXq(cndCtx.xq(1), currentDict).get(""));
-                                if (!left.isEmpty()) {
-                                    result.add(node);
-                                }
-                            }
-                            dict.replace("", result);
-                            break;
-                        case "empty":
-                        case "some":
-                        case "(":
-                        case "and":
-                        case "or":
-                        case "not":
-                    }
-                }
-                // return
-                XPathParser.ReturnClauseContext retCtx = ctx.returnClause();
-                return visitXq(retCtx.xq(), dict);
+                return visitForClause(ctx, dict, 0);
             }
         }
         switch (ctx.op.getText()) {
             case "(":
-                return visitXq(ctx, dict);
+                return visitXq(ctx.xq(0), dict);
             case ",":
                 dict = visitXq(ctx.xq(0), dict);
                 List<Node> current = dict.get("");
