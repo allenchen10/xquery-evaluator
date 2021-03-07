@@ -17,6 +17,16 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitXq(XPathParser.XqContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link XPathParser#attr}.
+	 * @param ctx the parse tree
+	 */
+	void enterAttr(XPathParser.AttrContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPathParser#attr}.
+	 * @param ctx the parse tree
+	 */
+	void exitAttr(XPathParser.AttrContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link XPathParser#var}.
 	 * @param ctx the parse tree
 	 */

@@ -16,6 +16,12 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitXq(XPathParser.XqContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link XPathParser#attr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAttr(XPathParser.AttrContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link XPathParser#var}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

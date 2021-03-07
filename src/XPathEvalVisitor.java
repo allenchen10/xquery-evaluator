@@ -1,3 +1,4 @@
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -203,6 +204,72 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 Node elem = makeElem(ctx.tagName.getText(), visitXq(ctx.xq(0), dict).get(""));
                 dict.replace("", new ArrayList<>());
                 dict.get("").add(elem);
+                return dict;
+            case "join":
+                XPathParser.AttrContext attr1 = ctx.attr(0);
+                XPathParser.AttrContext attr2 = ctx.attr(1);
+                List<String> keyList = new ArrayList<>();
+                result = new ArrayList<>();
+                for (TerminalNode keyName:
+                     attr1.ID()) {
+                    keyList.add(keyName.getText());
+                }
+                List<Node> tuples = visitXq(ctx.xq(0), dict).get("");
+                Map<String, List<Node>> joinMap = new HashMap<>();
+                for (Node tuple1:
+                     tuples) {
+                    Node child = tuple1.getFirstChild();
+                    StringBuilder key = new StringBuilder();
+                    while (child != null) {
+                        if (keyList.contains(child.getNodeName())) {
+                            key.append(child.getTextContent());
+                        }
+                        child = child.getNextSibling();
+                    }
+                    if (joinMap.containsKey(key.toString())) {
+                        joinMap.get(key.toString()).add(tuple1);
+                    } else {
+                        List<Node> nodeList = new ArrayList<>();
+                        nodeList.add(tuple1);
+                        joinMap.put(key.toString(), nodeList);
+                    }
+                }
+                tuples = visitXq(ctx.xq(1), dict).get("");
+                keyList = new ArrayList<>();
+                for (TerminalNode keyName:
+                        attr2.ID()) {
+                    keyList.add(keyName.getText());
+                }
+                for (Node tuple2:
+                     tuples) {
+                    Node child = tuple2.getFirstChild();
+                    StringBuilder key = new StringBuilder();
+                    while (child != null) {
+                        if (keyList.contains(child.getNodeName())) {
+                            key.append(child.getTextContent());
+                        }
+                        child = child.getNextSibling();
+                    }
+                    if (joinMap.containsKey(key.toString())) {
+                        List<Node> nodeList = joinMap.get(key.toString());
+                        for (Node tuple1:
+                             nodeList) {
+                            Node tuple = doc.createElement("tuple");
+                            child = tuple1.getFirstChild();
+                            while (child != null) {
+                                tuple.appendChild(doc.adoptNode(child.cloneNode(true)));
+                                child = child.getNextSibling();
+                            }
+                            child = tuple2.getFirstChild();
+                            while (child != null) {
+                                tuple.appendChild(doc.adoptNode(child.cloneNode(true)));
+                                child = child.getNextSibling();
+                            }
+                            result.add(tuple);
+                        }
+                    }
+                }
+                dict.replace("", result);
                 return dict;
         }
         return dict;

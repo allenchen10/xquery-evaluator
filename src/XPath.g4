@@ -8,7 +8,10 @@ xq
     | xq op=('/'|'//') rp
     | op='<' tagName=ID '>' '{' xq '}' '</' tagName=ID '>'
     | forClause letClause? whereClause? returnClause
-    | letClause xq;
+    | letClause xq
+    | op='join' '(' xq ',' xq ',' attr ',' attr ')';
+attr
+    : '[' (ID ',')* ID ']';
 var
     : '$' varName=ID;
 forClause
