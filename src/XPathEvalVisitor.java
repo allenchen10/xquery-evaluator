@@ -222,7 +222,7 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                     StringBuilder key = new StringBuilder();
                     while (child != null) {
                         if (keyList.contains(child.getNodeName())) {
-                            key.append(child.getTextContent());
+                            key.append(child.getTextContent().hashCode());
                         }
                         child = child.getNextSibling();
                     }
@@ -246,7 +246,7 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                     StringBuilder key = new StringBuilder();
                     while (child != null) {
                         if (keyList.contains(child.getNodeName())) {
-                            key.append(child.getTextContent());
+                            key.append(child.getTextContent().hashCode());
                         }
                         child = child.getNextSibling();
                     }
