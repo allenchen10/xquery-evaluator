@@ -26,7 +26,9 @@ public class Main {
             ParseTree parseTree = rewriteParser.xq();
             RewriteEvalVisitor rewriteEvalVisitor = new RewriteEvalVisitor();
             String rewrite = rewriteEvalVisitor.visit(parseTree);
+            System.out.println("Rewritten query:");
             System.out.println(rewrite);
+            System.out.println("Check output.xml for the result.");
 
             CharStream query = CharStreams.fromString(rewrite);
             XPathLexer lexer = new XPathLexer(query);

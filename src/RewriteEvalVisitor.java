@@ -1,12 +1,10 @@
-import org.antlr.v4.runtime.misc.Pair;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
 
-    private Map<String, List<String>> desc;
-    private Map<String, List<String>> dependents;
-    private Map<String, String> binding;
     private Map<String, String> equal;
     private Map<String, Map<String, List<String>>> joins;
     private Map<String, String> roots;
@@ -15,9 +13,9 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
 
     @Override
     public String visitXq(RewriteParser.XqContext ctx) {
-        desc = new HashMap<>();
-        dependents = new HashMap<>();
-        binding = new HashMap<>();
+        Map<String, List<String>> desc = new HashMap<>();
+        Map<String, List<String>> dependents = new HashMap<>();
+        Map<String, String> binding = new HashMap<>();
         equal = new HashMap<>();
         joins = new HashMap<>();
         roots = new HashMap<>();
@@ -61,96 +59,96 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
             }
         }
         visitCond(ctx.cond());
-        String result = "";
-        String forStr = "";
-        String whereStr = "";
-        String returnStr = "";
+        StringBuilder result = new StringBuilder();
+        StringBuilder forStr = new StringBuilder();
+        StringBuilder whereStr = new StringBuilder();
+        StringBuilder returnStr = new StringBuilder();
         Map<String, List<String>> joinMap = joins.get(joined.get(0));
         for (String var:
              desc.get(joined.get(0))) {
-            if (!forStr.isEmpty()) {
-                forStr += ",\n";
+            if (forStr.length() > 0) {
+                forStr.append(",\n");
             }
-            forStr += "$" + var + " in " + binding.get(var);
+            forStr.append("$").append(var).append(" in ").append(binding.get(var));
             if (equal.containsKey(var)) {
-                if (whereStr.isEmpty()) {
-                    whereStr += "\nwhere ";
+                if (whereStr.length() == 0) {
+                    whereStr.append("\nwhere ");
                 } else {
-                    whereStr += " and ";
+                    whereStr.append(" and ");
                 }
-                whereStr += "$" + var + " eq " + equal.get(var);
+                whereStr.append("$").append(var).append(" eq ").append(equal.get(var));
             }
-            if (!returnStr.isEmpty()) {
-                returnStr += ",\n";
+            if (returnStr.length() > 0) {
+                returnStr.append(",\n");
             }
-            returnStr += "<" + var + ">{$" + var + "}</" + var + ">";
+            returnStr.append("<").append(var).append(">{$").append(var).append("}</").append(var).append(">");
         }
         for (String root:
              nonJoined) {
             for (String var:
                     desc.get(root)) {
-                forStr += ",\n$" + var + " in " + binding.get(var);
+                forStr.append(",\n$").append(var).append(" in ").append(binding.get(var));
                 if (equal.containsKey(var)) {
-                    if (whereStr.isEmpty()) {
-                        whereStr += "\nwhere ";
+                    if (whereStr.length() == 0) {
+                        whereStr.append("\nwhere ");
                     } else {
-                        whereStr += " and ";
+                        whereStr.append(" and ");
                     }
-                    whereStr += "$" + var + " eq " + equal.get(var);
+                    whereStr.append("$").append(var).append(" eq ").append(equal.get(var));
                 }
-                returnStr += ",\n<" + var + ">{$" + var + "}</" + var + ">";
+                returnStr.append(",\n<").append(var).append(">{$").append(var).append("}</").append(var).append(">");
             }
         }
-        result += "for " + forStr + whereStr + "\nreturn <tuple>{\n" + returnStr + "\n}</tuple>";
+        result.append("for ").append(forStr).append(whereStr).append("\nreturn <tuple>{\n").append(returnStr).append("\n}</tuple>");
         while (!joinMap.isEmpty()) {
             for (String toJoin:
                  joinMap.keySet()) {
-                forStr = "";
-                whereStr = "";
-                returnStr = "";
-                String attr1 = "";
-                String attr2 = "";
+                forStr = new StringBuilder();
+                whereStr = new StringBuilder();
+                returnStr = new StringBuilder();
+                StringBuilder attr1 = new StringBuilder();
+                StringBuilder attr2 = new StringBuilder();
                 for (String var:
                     desc.get(toJoin)) {
-                    if (!forStr.isEmpty()) {
-                        forStr += ",\n";
+                    if (forStr.length() > 0) {
+                        forStr.append(",\n");
                     }
-                    forStr += "$" + var + " in " + binding.get(var);
+                    forStr.append("$").append(var).append(" in ").append(binding.get(var));
                     if (equal.containsKey(var)) {
-                        if (whereStr.isEmpty()) {
-                            whereStr += "\nwhere ";
+                        if (whereStr.length() == 0) {
+                            whereStr.append("\nwhere ");
                         } else {
-                            whereStr += " and ";
+                            whereStr.append(" and ");
                         }
-                        whereStr += "$" + var + " eq " + equal.get(var);
+                        whereStr.append("$").append(var).append(" eq ").append(equal.get(var));
                     }
-                    if (!returnStr.isEmpty()) {
-                        returnStr += ",\n";
+                    if (returnStr.length() > 0) {
+                        returnStr.append(",\n");
                     }
-                    returnStr += "<" + var + ">{$" + var + "}</" + var + ">";
+                    returnStr.append("<").append(var).append(">{$").append(var).append("}</").append(var).append(">");
                 }
                 for (String var1:
                      joinMap.get(toJoin)) {
-                    if (attr1.isEmpty()) {
-                        attr1 += "[";
+                    if (attr1.length() == 0) {
+                        attr1.append("[");
                     } else {
-                        attr1 += ", ";
+                        attr1.append(", ");
                     }
-                    attr1 += var1;
+                    attr1.append(var1);
                 }
-                attr1 += "]";
+                attr1.append("]");
                 for (String var2:
                      joins.get(toJoin).get(joined.get(0))) {
-                    if (attr2.isEmpty()) {
-                        attr2 += "[";
+                    if (attr2.length() == 0) {
+                        attr2.append("[");
                     } else {
-                        attr2 += ", ";
+                        attr2.append(", ");
                     }
-                    attr2 += var2;
+                    attr2.append(var2);
                 }
-                attr2 += "]";
-                result = "join (\n" + result + ",\n" + "for " + forStr + whereStr + "\nreturn <tuple>{\n"
-                        + returnStr + "\n}</tuple>,\n" + attr1 + ", " + attr2 + "\n)";
+                attr2.append("]");
+                result = new StringBuilder("join (\n" + result + ",\n" + "for " + forStr + whereStr + "\nreturn <tuple>{\n"
+                        + returnStr + "\n}</tuple>,\n" + attr1 + ", " + attr2 + "\n)");
                 joinMap.remove(toJoin);
                 for (String joinNext:
                      joins.get(toJoin).keySet()) {
@@ -168,8 +166,8 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
                 break;
             }
         }
-        result = "for $tuple in " + result + "\n" + visitRet(ctx.ret());
-        return result;
+        result = new StringBuilder("for $tuple in " + result + "\n" + visitRet(ctx.ret()));
+        return result.toString();
     }
 
     @Override
