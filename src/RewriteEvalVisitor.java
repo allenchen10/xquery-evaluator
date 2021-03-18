@@ -1,3 +1,5 @@
+import org.antlr.v4.runtime.misc.Pair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -6,6 +8,7 @@ import java.util.Map;
 public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
 
     private Map<String, String> equal;
+    private List<Pair<String, String>> constantEqual;
     private Map<String, Map<String, List<String>>> joins;
     private Map<String, String> roots;
     private List<String> joined;
@@ -17,6 +20,7 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
         Map<String, List<String>> dependents = new HashMap<>();
         Map<String, String> binding = new HashMap<>();
         equal = new HashMap<>();
+        constantEqual = new ArrayList<>();
         joins = new HashMap<>();
         roots = new HashMap<>();
         joined = new ArrayList<>();
@@ -98,6 +102,15 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
                 }
                 returnStr.append(",\n<").append(var).append(">{$").append(var).append("}</").append(var).append(">");
             }
+        }
+        while (!constantEqual.isEmpty()) {
+            if (whereStr.length() == 0) {
+                whereStr.append("\nwhere ");
+            } else {
+                whereStr.append(" and ");
+            }
+            Pair<String, String> item = constantEqual.remove(0);
+            whereStr.append(item.a).append(" eq ").append(item.b);
         }
         result.append("for ").append(forStr).append(whereStr).append("\nreturn <tuple>{\n").append(returnStr).append("\n}</tuple>");
         while (!joinMap.isEmpty()) {
@@ -224,8 +237,10 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
             visitCond(ctx.cond(1));
         } else {
             List<RewriteParser.VarContext> vars = ctx.var();
-            if (vars.size() == 1) {
-                equal.put(vars.get(0).varName.getText(), ctx.constant.getText());
+            if (vars.size() == 0) {
+                constantEqual.add(new Pair<>(ctx.STRING(0).getText(), ctx.STRING(1).getText()));
+            } else if (vars.size() == 1) {
+                equal.put(vars.get(0).varName.getText(), ctx.STRING(0).getText());
             } else {
                 String var1 = vars.get(0).varName.getText();
                 String var2 = vars.get(1).varName.getText();

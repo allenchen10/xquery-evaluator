@@ -535,7 +535,6 @@ public class RewriteParser extends Parser {
 	}
 
 	public static class CondContext extends ParserRuleContext {
-		public Token constant;
 		public List<VarContext> var() {
 			return getRuleContexts(VarContext.class);
 		}
@@ -600,7 +599,7 @@ public class RewriteParser extends Parser {
 			case STRING:
 				{
 				setState(81);
-				((CondContext)_localctx).constant = match(STRING);
+				match(STRING);
 				}
 				break;
 			default:
@@ -628,7 +627,7 @@ public class RewriteParser extends Parser {
 			case STRING:
 				{
 				setState(86);
-				((CondContext)_localctx).constant = match(STRING);
+				match(STRING);
 				}
 				break;
 			default:

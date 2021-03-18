@@ -13,7 +13,7 @@ ret
     | '<' tagName=ID '>' '{' ret '}' '</' tagName=ID '>'
     | path;
 cond
-    : (var|constant=STRING) ('eq'|'=') (var|constant=STRING)
+    : (var|STRING) ('eq'|'=') (var|STRING)
     | cond 'and' cond;
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 STRING: '"' .*? '"';
