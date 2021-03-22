@@ -1,4 +1,4 @@
-// Generated from /Users/chenjiachen/Documents/UCSD/WI21/CSE 232B/cse-232b-project/src/Rewrite.g4 by ANTLR 4.9.1
+// Generated from /Users/chenjiachen/github/cse-232b-project/src/Rewrite.g4 by ANTLR 4.9.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -46,6 +46,18 @@ public class RewriteBaseListener implements RewriteListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPath(RewriteParser.PathContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTag(RewriteParser.TagContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTag(RewriteParser.TagContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

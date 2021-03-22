@@ -4,9 +4,11 @@ xq
 var
     : '$' varName=ID;
 path
-    : ('doc' '(' fileName=STRING ')'|var) (sep ID)* sep (tagName=ID | 'text()');
+    : ('doc' '(' fileName=STRING ')'|var) (sep tag)+;
+tag
+    : (ID|'*'|'.'|'..'|'text()');
 sep
-    : op=('/'|'//');
+    : ('/'|'//');
 ret
     : var
     | ret ',' ret

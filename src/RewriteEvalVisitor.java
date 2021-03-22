@@ -179,7 +179,7 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
                 break;
             }
         }
-        result = new StringBuilder("for $tuple in " + result + "\n" + visitRet(ctx.ret()));
+        result = new StringBuilder("for $tuple in " + result + "\n" + "return " + visitRet(ctx.ret()));
         return result.toString();
     }
 
@@ -197,22 +197,21 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
             str.append(visitVar(ctx.var()));
         }
         List<RewriteParser.SepContext> seps = ctx.sep();
-        for (int i = 0; i < seps.size() - 1; i++) {
+        for (int i = 0; i < seps.size(); i++) {
             str.append(visitSep(ctx.sep(i)));
-            str.append(ctx.ID(i));
-        }
-        str.append(visitSep(ctx.sep(seps.size() - 1)));
-        if (ctx.tagName != null) {
-            str.append(ctx.tagName.getText());
-        } else {
-            str.append("text()");
+            str.append(visitTag(ctx.tag(i)));
         }
         return str.toString();
     }
 
     @Override
+    public String visitTag(RewriteParser.TagContext ctx) {
+        return ctx.getText();
+    }
+
+    @Override
     public String visitSep(RewriteParser.SepContext ctx) {
-        return ctx.op.getText();
+        return ctx.getText();
     }
 
     @Override
@@ -227,7 +226,7 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
         if (ctx.ret().size() == 2) {
             return visitRet(ctx.ret(0)) + ", " + visitRet(ctx.ret(1));
         }
-        return "return <" + ctx.tagName.getText() + ">{\n" + visitRet(ctx.ret(0)) + "\n}</" + ctx.tagName.getText() + ">";
+        return "<" + ctx.tagName.getText() + ">{\n" + visitRet(ctx.ret(0)) + "\n}</" + ctx.tagName.getText() + ">";
     }
 
     @Override

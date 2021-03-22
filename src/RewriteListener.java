@@ -1,4 +1,4 @@
-// Generated from /Users/chenjiachen/Documents/UCSD/WI21/CSE 232B/cse-232b-project/src/Rewrite.g4 by ANTLR 4.9.1
+// Generated from /Users/chenjiachen/github/cse-232b-project/src/Rewrite.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -36,6 +36,16 @@ public interface RewriteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPath(RewriteParser.PathContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RewriteParser#tag}.
+	 * @param ctx the parse tree
+	 */
+	void enterTag(RewriteParser.TagContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RewriteParser#tag}.
+	 * @param ctx the parse tree
+	 */
+	void exitTag(RewriteParser.TagContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RewriteParser#sep}.
 	 * @param ctx the parse tree

@@ -1,4 +1,4 @@
-// Generated from /Users/chenjiachen/Documents/UCSD/WI21/CSE 232B/cse-232b-project/src/Rewrite.g4 by ANTLR 4.9.1
+// Generated from /Users/chenjiachen/github/cse-232b-project/src/Rewrite.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -27,6 +27,12 @@ public interface RewriteVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPath(RewriteParser.PathContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link RewriteParser#tag}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTag(RewriteParser.TagContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link RewriteParser#sep}.
 	 * @param ctx the parse tree
