@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/cse-232b-project.iml" filepath="$PROJECT_DIR$/cse-232b-project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xquery-evaluator.iml" filepath="$PROJECT_DIR$/xquery-evaluator.iml" />
     </modules>
   </component>
 </project>

@@ -2,7 +2,7 @@
   <artifact type="jar" name="cse-232b-project:jar">
     <output-path>$PROJECT_DIR$/</output-path>
     <root id="archive" name="cse-232b-project.jar">
-      <element id="module-output" name="cse-232b-project" />
+      <element id="module-output" name="xquery-evaluator" />
       <element id="extracted-dir" path="/usr/local/Cellar/antlr/4.9.2/antlr-4.9.2-complete.jar" path-in-jar="/" />
     </root>
   </artifact>

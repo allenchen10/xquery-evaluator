@@ -44,8 +44,8 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
                 }
             }
         }
-        for (String root:
-             desc.keySet()) {
+        for (String root :
+                desc.keySet()) {
             List<String> curr = new ArrayList<>();
             curr.add(root);
             roots.put(root, root);
@@ -55,8 +55,8 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
                     List<String> children = dependents.get(node);
                     desc.get(root).addAll(children);
                     curr.addAll(children);
-                    for (String child:
-                         children) {
+                    for (String child :
+                            children) {
                         roots.put(child, root);
                     }
                 }
@@ -68,8 +68,8 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
         StringBuilder whereStr = new StringBuilder();
         StringBuilder returnStr = new StringBuilder();
         Map<String, List<String>> joinMap = joins.get(joined.get(0));
-        for (String var:
-             desc.get(joined.get(0))) {
+        for (String var :
+                desc.get(joined.get(0))) {
             if (forStr.length() > 0) {
                 forStr.append(",\n");
             }
@@ -87,9 +87,9 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
             }
             returnStr.append("<").append(var).append(">{$").append(var).append("}</").append(var).append(">");
         }
-        for (String root:
-             nonJoined) {
-            for (String var:
+        for (String root :
+                nonJoined) {
+            for (String var :
                     desc.get(root)) {
                 forStr.append(",\n$").append(var).append(" in ").append(binding.get(var));
                 if (equal.containsKey(var)) {
@@ -114,15 +114,15 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
         }
         result.append("for ").append(forStr).append(whereStr).append("\nreturn <tuple>{\n").append(returnStr).append("\n}</tuple>");
         while (!joinMap.isEmpty()) {
-            for (String toJoin:
-                 joinMap.keySet()) {
+            for (String toJoin :
+                    joinMap.keySet()) {
                 forStr = new StringBuilder();
                 whereStr = new StringBuilder();
                 returnStr = new StringBuilder();
                 StringBuilder attr1 = new StringBuilder();
                 StringBuilder attr2 = new StringBuilder();
-                for (String var:
-                    desc.get(toJoin)) {
+                for (String var :
+                        desc.get(toJoin)) {
                     if (forStr.length() > 0) {
                         forStr.append(",\n");
                     }
@@ -140,8 +140,8 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
                     }
                     returnStr.append("<").append(var).append(">{$").append(var).append("}</").append(var).append(">");
                 }
-                for (String var1:
-                     joinMap.get(toJoin)) {
+                for (String var1 :
+                        joinMap.get(toJoin)) {
                     if (attr1.length() == 0) {
                         attr1.append("[");
                     } else {
@@ -150,8 +150,8 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
                     attr1.append(var1);
                 }
                 attr1.append("]");
-                for (String var2:
-                     joins.get(toJoin).get(joined.get(0))) {
+                for (String var2 :
+                        joins.get(toJoin).get(joined.get(0))) {
                     if (attr2.length() == 0) {
                         attr2.append("[");
                     } else {
@@ -163,8 +163,8 @@ public class RewriteEvalVisitor extends RewriteBaseVisitor<String> {
                 result = new StringBuilder("join (\n" + result + ",\n" + "for " + forStr + whereStr + "\nreturn <tuple>{\n"
                         + returnStr + "\n}</tuple>,\n" + attr1 + ", " + attr2 + "\n)");
                 joinMap.remove(toJoin);
-                for (String joinNext:
-                     joins.get(toJoin).keySet()) {
+                for (String joinNext :
+                        joins.get(toJoin).keySet()) {
                     if (!joinNext.equals(joined.get(0))) {
                         if (joinMap.containsKey(joinNext)) {
                             joinMap.get(joinNext).addAll(joins.get(toJoin).get(joinNext));

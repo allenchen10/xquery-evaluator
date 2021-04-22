@@ -30,7 +30,7 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
             List<Node> nodes = visitXq(forCtx.xq(applied), dict).get("");
             List<Node> curr = new ArrayList<>();
             List<Node> result = new ArrayList<>();
-            for (Node node:
+            for (Node node :
                     nodes) {
                 curr.clear();
                 curr.add(node);
@@ -85,9 +85,9 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 List<Node> leftNodes = visitXq(ctx.xq(0), dict).get("");
                 List<Node> rightNodes = visitXq(ctx.xq(1), dict).get("");
                 boolean same = false;
-                for (Node left:
+                for (Node left :
                         leftNodes) {
-                    for (Node right:
+                    for (Node right :
                             rightNodes) {
                         if (left.isEqualNode(right)) {
                             same = true;
@@ -112,8 +112,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                     nodes = visitXq(ctx.xq(applied), dict).get("");
                     List<Node> curr = new ArrayList<>();
                     boolean result = false;
-                    for (Node node:
-                         nodes) {
+                    for (Node node :
+                            nodes) {
                         curr.clear();
                         curr.add(node);
                         if (dict.containsKey(varName)) {
@@ -175,7 +175,7 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 dict = visitXq(ctx.xq(0), dict);
                 current = visitRp(ctx.rp(), dict.get(""));
                 List<Node> result = new ArrayList<>();
-                for (Node node:
+                for (Node node :
                         current) {
                     if (!result.contains(node)) {
                         result.add(node);
@@ -186,13 +186,13 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
             case "//":
                 current = visitXq(ctx.xq(0), dict).get("");
                 List<Node> descendants = new ArrayList<>();
-                for (Node node:
+                for (Node node :
                         current) {
                     descendants.addAll(descendantNodes(node));
                 }
                 current = visitRp(ctx.rp(), descendants);
                 result = new ArrayList<>();
-                for (Node node:
+                for (Node node :
                         current) {
                     if (!result.contains(node)) {
                         result.add(node);
@@ -210,14 +210,14 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 XPathParser.AttrContext attr2 = ctx.attr(1);
                 List<String> keyList = new ArrayList<>();
                 result = new ArrayList<>();
-                for (TerminalNode keyName:
-                     attr1.ID()) {
+                for (TerminalNode keyName :
+                        attr1.ID()) {
                     keyList.add(keyName.getText());
                 }
                 List<Node> tuples = visitXq(ctx.xq(0), dict).get("");
                 Map<String, List<Node>> joinMap = new HashMap<>();
-                for (Node tuple1:
-                     tuples) {
+                for (Node tuple1 :
+                        tuples) {
                     Node child = tuple1.getFirstChild();
                     StringBuilder key = new StringBuilder();
                     while (child != null) {
@@ -236,12 +236,12 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 }
                 tuples = visitXq(ctx.xq(1), dict).get("");
                 keyList = new ArrayList<>();
-                for (TerminalNode keyName:
+                for (TerminalNode keyName :
                         attr2.ID()) {
                     keyList.add(keyName.getText());
                 }
-                for (Node tuple2:
-                     tuples) {
+                for (Node tuple2 :
+                        tuples) {
                     Node child = tuple2.getFirstChild();
                     StringBuilder key = new StringBuilder();
                     while (child != null) {
@@ -252,8 +252,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                     }
                     if (joinMap.containsKey(key.toString())) {
                         List<Node> nodeList = joinMap.get(key.toString());
-                        for (Node tuple1:
-                             nodeList) {
+                        for (Node tuple1 :
+                                nodeList) {
                             Node tuple = doc.createElement("tuple");
                             child = tuple1.getFirstChild();
                             while (child != null) {
@@ -281,8 +281,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
 
     private Node makeElem(String tagName, List<Node> nodes) {
         Node root = doc.createElement(tagName);
-        for (Node node:
-             nodes) {
+        for (Node node :
+                nodes) {
             root.appendChild(doc.adoptNode(node.cloneNode(true)));
         }
         return root;
@@ -326,8 +326,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
     private List<Node> visitRp(XPathParser.RpContext ctx, List<Node> nodes) {
         List<Node> result = new ArrayList<>();
         if (ctx.op == null) {
-            for (Node node:
-                 nodes) {
+            for (Node node :
+                    nodes) {
                 Node child = node.getFirstChild();
                 while (child != null) {
                     if (child.getNodeName().equals(ctx.tagName.getText())) {
@@ -340,7 +340,7 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
         }
         switch (ctx.op.getText()) {
             case "*":
-                for (Node node:
+                for (Node node :
                         nodes) {
                     Node child = node.getFirstChild();
                     while (child != null) {
@@ -353,8 +353,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 result.addAll(nodes);
                 break;
             case "..":
-                for (Node node:
-                     nodes) {
+                for (Node node :
+                        nodes) {
                     Node parent = node.getParentNode();
                     if (parent != null) {
                         result.add(parent);
@@ -362,8 +362,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 }
                 break;
             case "text()":
-                for (Node node:
-                     nodes) {
+                for (Node node :
+                        nodes) {
                     Node child = node.getFirstChild();
                     while (child != null) {
                         if (child.getNodeType() == Node.TEXT_NODE) {
@@ -374,7 +374,7 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 }
                 break;
             case "@":
-                for (Node node:
+                for (Node node :
                         nodes) {
                     if (node.hasAttributes()) {
                         Node att = node.getAttributes().getNamedItem(ctx.attName.getText());
@@ -390,8 +390,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
             case "/":
                 List<Node> current = visitRp(ctx.rp(0), nodes);
                 current = visitRp(ctx.rp(1), current);
-                for (Node node:
-                     current) {
+                for (Node node :
+                        current) {
                     if (!result.contains(node)) {
                         result.add(node);
                     }
@@ -400,12 +400,12 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
             case "//":
                 current = visitRp(ctx.rp(0), nodes);
                 List<Node> descendants = new ArrayList<>();
-                for (Node node:
-                     current) {
+                for (Node node :
+                        current) {
                     descendants.addAll(descendantNodes(node));
                 }
                 current = visitRp(ctx.rp(1), descendants);
-                for (Node node:
+                for (Node node :
                         current) {
                     if (!result.contains(node)) {
                         result.add(node);
@@ -428,8 +428,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
         List<Node> result = new ArrayList<>();
         if (ctx.op == null) {
             List<Node> current = new ArrayList<>();
-            for (Node node:
-                 nodes) {
+            for (Node node :
+                    nodes) {
                 current.clear();
                 current.add(node);
                 if (!visitRp(ctx.rp(0), current).isEmpty()) {
@@ -444,13 +444,13 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                     String str = ctx.STRING().getText();
                     str = str.substring(1, str.length() - 1);
                     List<Node> current = new ArrayList<>();
-                    for (Node node:
+                    for (Node node :
                             nodes) {
                         current.clear();
                         current.add(node);
                         current = visitRp(ctx.rp(0), current);
-                        for (Node currentNode:
-                             current) {
+                        for (Node currentNode :
+                                current) {
                             if (currentNode.getTextContent().equals(str)) {
                                 result.add(node);
                             }
@@ -460,16 +460,16 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 }
             case "eq":
                 List<Node> current = new ArrayList<>();
-                for (Node node:
+                for (Node node :
                         nodes) {
                     current.clear();
                     current.add(node);
                     List<Node> leftNodes = visitRp(ctx.rp(0), current);
                     List<Node> rightNodes = visitRp(ctx.rp(1), current);
                     boolean same = false;
-                    for (Node left:
+                    for (Node left :
                             leftNodes) {
-                        for (Node right:
+                        for (Node right :
                                 rightNodes) {
                             if (left.isEqualNode(right)) {
                                 same = true;
@@ -488,7 +488,7 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
             case "==":
             case "is":
                 current = new ArrayList<>();
-                for (Node node:
+                for (Node node :
                         nodes) {
                     current.clear();
                     current.add(node);
@@ -506,8 +506,8 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 return visitF(ctx.f(1), current);
             case "or":
                 current = new ArrayList<>();
-                for (Node node:
-                     nodes) {
+                for (Node node :
+                        nodes) {
                     current.clear();
                     current.add(node);
                     if (visitF(ctx.f(0), nodes).isEmpty() && visitF(ctx.f(1), nodes).isEmpty()) {
@@ -518,7 +518,7 @@ public class XPathEvalVisitor extends XPathBaseVisitor<Map<String, List<Node>>> 
                 break;
             case "not":
                 current = new ArrayList<>();
-                for (Node node:
+                for (Node node :
                         nodes) {
                     current.clear();
                     current.add(node);
